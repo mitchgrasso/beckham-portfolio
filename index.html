@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beckham Grasso</title>
+<meta name="description" content="Illustration and character design by Beckham Grasso.">
+<meta name="theme-color" content="#2a2b2f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Beckham Grasso">
+<meta property="og:description" content="Illustration and character design.">
+<meta property="og:url" content="https://beckhamgrasso.com/">
+<meta property="og:image" content="https://beckhamgrasso.com/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%232a2b2f'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='30' font-weight='800' text-anchor='middle' fill='%23ecebe6'%3EBG%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #2a2b2f;
+    --tile: #37383d;
+    --ink: #ecebe6;
+    --muted: #a8a9ad;
+    --gap: clamp(6px, 0.9vw, 12px);
+    --pad: clamp(16px, 3.5vw, 48px);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); transition: background-color 0.9s ease; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    transition: background-color 0.9s ease;
+    color: var(--ink);
+    font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: calc(var(--pad) * 1.1) var(--pad) calc(var(--pad) * 0.8);
+    padding-top: max(calc(var(--pad) * 1.1), env(safe-area-inset-top));
+  }
+  h1 { margin: 0; line-height: 0; }
+  h1 img { display: block; height: clamp(84px, 13vw, 168px); width: auto; max-width: 100%; }
+  .contact {
+    color: var(--muted);
+    font-size: clamp(1.25rem, 2.1vw, 1.7rem);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    margin-bottom: 0.4rem;
+    white-space: nowrap;
+  }
+  .contact:hover { color: var(--ink); }
+
+  main { padding: 0 var(--pad); }
+  .toprow { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); margin-bottom: var(--gap); }
+  .masonry { display: flex; gap: var(--gap); align-items: flex-start; }
+  .col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--gap); }
+
+  .piece {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--tile);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: zoom-in;
+    overflow: hidden;
+  }
+  .piece img { display: block; width: 100%; height: auto; }
+  .piece .cap {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 2.6rem 0.9rem 0.8rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.68));
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .piece:hover .cap, .piece:focus-visible .cap { opacity: 1; }
+  @media (hover: none) { .piece .cap { display: none; } }
+
+  .lineup { padding: calc(var(--pad) * 1.8) var(--pad) 0; }
+  .lineup img { display: block; width: 100%; max-width: 1600px; height: auto; margin: 0 auto; opacity: 0.3; }
+
+  footer {
+    padding: calc(var(--pad) * 1.1) var(--pad) calc(var(--pad) * 1.6);
+    padding-bottom: max(calc(var(--pad) * 1.6), env(safe-area-inset-bottom));
+    color: var(--muted);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    line-height: 1.35;
+  }
+  footer a { color: var(--ink); }
+
+  .piece .play {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 34px; height: 34px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: rgba(20, 21, 24, 0.55);
+    color: #fff;
+  }
+  .piece .play svg { width: 13px; height: 13px; margin-left: 2px; }
+
+  /* Viewer */
+  .lb {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    background: var(--lb-bg, #181a1c);
+    transition: background-color 0.5s ease;
+  }
+  .lb[hidden] { display: none; }
+  .lb::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.5) 100%);
+  }
+  .lb-top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    padding-top: max(0.7rem, env(safe-area-inset-top));
+  }
+  .lb-title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .lb-count { color: var(--muted); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+  .lb button {
+    font: inherit;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid rgba(236, 235, 230, 0.35);
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+  }
+  .lb button:hover { background: rgba(236, 235, 230, 0.12); }
+  .lb-stage {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    overflow: auto;
+    padding: 0 clamp(0px, 5.5vw, 84px) max(0.8rem, env(safe-area-inset-bottom));
+  }
+  .lb-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: zoom-in;
+  }
+  .lb-stage.zoomed .lb-img {
+    flex: none;
+    width: var(--zw);
+    height: auto;
+    margin: auto;
+    object-fit: initial;
+    cursor: zoom-out;
+  }
+  .lb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    padding: 0 !important;
+    display: grid;
+    place-items: center;
+    background: rgba(24, 25, 28, 0.6) !important;
+  }
+  .lb-nav svg { width: 22px; height: 22px; }
+  .lb-prev { left: max(8px, env(safe-area-inset-left)); }
+  .lb-next { right: max(8px, env(safe-area-inset-right)); }
+  @media (max-width: 640px) { .lb-nav { display: none; } }
+
+  /* Timelapse replay */
+  .lb-video { display: none; flex: none; margin: auto; background: #000; border-radius: 4px; cursor: pointer; }
+  .lb-stage.replaying { padding-bottom: 84px; }
+  .lb-stage.replaying .lb-video { display: block; }
+  .lb-stage.replaying .lb-img { display: none; }
+  .lb-img.fadein { animation: fadein 0.6s ease; }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  .lb-controls {
+    position: absolute;
+    left: 50%;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: min(620px, calc(100% - 32px));
+    padding: 0.45rem 1.1rem 0.45rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(18, 19, 22, 0.78);
+  }
+  .lb-controls[hidden] { display: none; }
+  .lb .lb-controls button { width: 38px; height: 38px; padding: 0; display: grid; place-items: center; flex: none; }
+  .lb-controls svg { width: 16px; height: 16px; }
+  .lb-controls input[type=range] { flex: 1; min-width: 0; accent-color: var(--ink); cursor: pointer; }
+  .lb-time { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 480px) { .lb-time { display: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lb-img.fadein { animation: none; }
+    .piece .cap, html, body, .lb { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><img src="images/signature.png" alt="Beckham Grasso" width="1800" height="627"></h1>
+  <a class="contact" href="mailto:Beckhamtgrasso@gmail.com">Contact</a>
+</header>
+
+<main>
+  <div id="gallery" aria-label="Illustrations">
+    <noscript><p>Turn on JavaScript to see the gallery.</p></noscript>
+  </div>
+</main>
+
+<div class="lineup" aria-hidden="true"><img src="images/lineup.png" alt="" width="2400" height="438"></div>
+
+<footer>
+  Get in touch at <a href="mailto:Beckhamtgrasso@gmail.com">Beckhamtgrasso@gmail.com</a>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+  <div class="lb-top">
+    <h2 class="lb-title" id="lb-title"></h2>
+    <span class="lb-count" id="lb-count"></span>
+    <button type="button" id="lb-replay" hidden>Watch it drawn</button>
+    <button type="button" id="lb-zoom">Zoom</button>
+    <button type="button" id="lb-close">Close</button>
+  </div>
+  <div class="lb-stage" id="lb-stage" tabindex="-1">
+    <img class="lb-img" id="lb-img" alt="">
+    <video class="lb-video" id="lb-video" playsinline muted preload="none" disablepictureinpicture></video>
+    <button type="button" class="lb-nav lb-prev" id="lb-prev" aria-label="Previous piece">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>
+    </button>
+    <button type="button" class="lb-nav lb-next" id="lb-next" aria-label="Next piece">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
+    </button>
+  </div>
+  <div class="lb-controls" id="lb-controls" hidden>
+    <button type="button" id="lb-play" aria-label="Pause"></button>
+    <input type="range" id="lb-seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the drawing">
+    <span class="lb-time" id="lb-time">0:00</span>
+  </div>
+</div>
+
+<script>
+/*
+  To add a piece: put a small version in images/thumbs/ and a large version in
+  images/full/ (both .webp, same file name), then add one line below.
+  w and h are the thumbnail's pixel size, fw is the large version's width.
+  Set comic: true for tall, text-heavy pages so zoom fits them to the screen width.
+  tint / deep are the page and viewer background colours for that piece (optional).
+  Set video: true if videos/NAME.mp4 holds a timelapse of that piece.
+  Set top: true to put a piece in the row of three across the top (use same-shaped images).
+  Pieces appear in this order.
+*/
+const PIECES = [
+  { slug: "guy-1", title: "Guy 1", w: 800, h: 1040, fw: 2000, comic: false, top: true, tint: "#3f2d27", deep: "#5f3426",
+    alt: "Portrait of a man in a red beanie with dreadlocks and a red-striped shirt." },
+  { slug: "guy-2", title: "Guy 2", w: 800, h: 1040, fw: 2000, comic: false, top: true, tint: "#3c382a", deep: "#5b5229",
+    alt: "Portrait of a man with short brown hair, gold earrings and a green and blue striped shirt." },
+  { slug: "guy-3", title: "Guy 3", w: 800, h: 1040, fw: 2000, comic: false, top: true, tint: "#3b342b", deep: "#5b4729",
+    alt: "Portrait of a man with a bleached buzz cut and a bandage on his cheek, in a navy striped shirt." },
+  { slug: "fishing", title: "Fishing", w: 800, h: 800, fw: 2048, comic: false, video: true, tint: "#443922", deep: "#6b5019",
+    alt: "A shirtless man braces in a small boat against a bent fishing rod at sunset while a giant sea creature's eye watches from below." },
+  { slug: "midnight", title: "Midnight", w: 800, h: 946, fw: 2199, comic: false, tint: "#3e2442", deep: "#5e1c68",
+    alt: "A narrow city alley at night in blue and yellow, lit by glowing lamps beneath a red sky and a crescent moon." },
+  { slug: "waves", title: "Waves", w: 800, h: 1067, fw: 1949, comic: false, tint: "#262b40", deep: "#222f62",
+    alt: "A grinning surfer in striped board shorts rides a large wave under a deep blue sky." },
+  { slug: "open-ocean", title: "Open Ocean", w: 800, h: 1192, fw: 1745, comic: false, video: true, tint: "#252a41", deep: "#1f2c66",
+    alt: "A fishing boat at dusk lowers a glowing crescent moon like bait to the whales, turtles and fish gathered below." },
+  { slug: "fight", title: "Fight", w: 800, h: 618, fw: 2600, comic: false, tint: "#3b312b", deep: "#5b3c29",
+    alt: "A boxer lands a punch on an opponent who is thrown back against the ropes." },
+  { slug: "campfire", title: "Campfire", w: 800, h: 516, fw: 2600, comic: false, video: true, tint: "#2d2c3a", deep: "#2b295b",
+    alt: "Three friends around a campfire at night: one smoking in a camp chair, one standing and pointing, one playing guitar." },
+  { slug: "rascals", title: "Rascals", w: 800, h: 1033, fw: 1275, comic: false, tint: "#402926", deep: "#632922",
+    alt: "Gig poster for a band called Rascals: huge distressed red lettering above an illustrated drummer with extra arms, a two-headed singer and a horned guitarist." },
+  { slug: "untitled", title: "Untitled", w: 800, h: 869, fw: 2046, comic: false, video: true, tint: "#432323", deep: "#6a1c1b",
+    alt: "A man sits in a cluttered, dim room lit by red light, holding a small glowing frog-like figure." },
+  { slug: "mafia-man-1", title: "Mafia Man 1", w: 800, h: 1067, fw: 1949, comic: false, tint: "#2c363a", deep: "#294e5b",
+    alt: "A gorilla-faced man in a cream double-breasted suit and sunglasses walks with his hands in his pockets." },
+  { slug: "mafia-man-2", title: "Mafia Man 2", w: 800, h: 1067, fw: 1949, comic: false, video: true, tint: "#2c343a", deep: "#29455b",
+    alt: "A heavyset gorilla-faced man in a pinstripe three-piece suit and sunglasses holds a cigarette." },
+  { slug: "dog-man", title: "Dog Man", w: 800, h: 1174, fw: 1396, comic: false, video: true,
+    alt: "A tall man in an open striped shirt, shorts and flip-flops carries a small dog under one arm and a cigarette in the other hand." },
+  { slug: "monkeys", title: "Monkeys", w: 800, h: 800, fw: 1528, comic: false, video: true, tint: "#393a2c", deep: "#595b29",
+    alt: "Two macaques standing side by side, one in a dark suit and tie, the other in a light blue tracksuit." },
+  { slug: "babysitter", title: "Babysitter", w: 800, h: 1000, fw: 2080, comic: false,
+    alt: "A tall gorilla with a cigarette walks down a sidewalk holding the hand of a small girl in a hat and boots." },
+  { slug: "disco", title: "Disco", w: 800, h: 600, fw: 2600, comic: false, tint: "#3a2c2d", deep: "#5b292e",
+    alt: "A crowd of grinning faces seen from above, packed around one large smiling face, in pink and mauve." },
+  { slug: "kings", title: "Kings", w: 800, h: 600, fw: 2600, comic: false, tint: "#3c352a", deep: "#5b4829",
+    alt: "Character designs of three kings: a lanky bearded king in heart-print boxers, a baby king with a pacifier, and a stern king in an oversized robe, with silhouette studies below." },
+  { slug: "90s-luchadores", title: "90's Luchadores", w: 800, h: 653, fw: 2600, comic: false, tint: "#3a342c", deep: "#5b4729",
+    alt: "Character designs of three luchadores: a muscular hero in a blue mask and cape, a small fighter in a white jacket, and a tall champion with a belt, with silhouette studies below." },
+  { slug: "crab-x-crow-x-chimp", title: "Crab x Crow x Chimp", w: 800, h: 511, fw: 2600, comic: false, tint: "#3a362c", deep: "#5b4c29",
+    alt: "Three creature designs mixing a crab, a crow and a chimp, with silhouette studies below." },
+  { slug: "monster", title: "Monster", w: 800, h: 559, fw: 2600, comic: false,
+    alt: "A hunched gray monster with huge eyes and a mouth full of teeth leans on a vine-wrapped staff, with silhouette studies below." },
+  { slug: "interactions", title: "Interactions", w: 800, h: 645, fw: 2600, comic: false, tint: "#3e3328", deep: "#5f4226",
+    alt: "Scenes of a tiny bearded king and a towering masked luchador: the king rides his shoulders, pins him down, and stands over him." },
+  { slug: "pointer", title: "Pointer", w: 800, h: 1040, fw: 2000, comic: false,
+    alt: "Black and white sketch of a young man in a numbered jersey pointing at the viewer, with a speech bubble." },
+  { slug: "skating", title: "Skating", w: 800, h: 451, fw: 2600, comic: false,
+    alt: "Black and white sketches of a skateboarder mid-trick and a second skater pointing, beside a 38R logo." },
+  { slug: "friends", title: "Friends", w: 800, h: 1067, fw: 1949, comic: false,
+    alt: "Line drawing of a tall man smoking with a hand on his head, beside a short man in goggles holding a squirt gun in the air." },
+  { slug: "tired", title: "Tired", w: 800, h: 1067, fw: 1949, comic: false,
+    alt: "Line drawing of a lanky young man in flared jeans with a bag on his shoulder and a music player in his hand." },
+  { slug: "subway", title: "Subway", w: 800, h: 600, fw: 2600, comic: false,
+    alt: "Line sketch of a man dozing on a subway seat with a cigarette between his fingers, seen from above." },
+  { slug: "space-man", title: "Space Man", w: 800, h: 821, fw: 2532, comic: false,
+    alt: "Pencil sketch sheet of an astronaut: face expressions, running and floating poses, and a rocket for scale." },
+  { slug: "room-sketch", title: "Room Sketch", w: 800, h: 800, fw: 2048, comic: false,
+    alt: "Loose line sketch of a bedroom with two speakers, hanging clothes, a mattress on the floor and a guitar." },
+  { slug: "plant", title: "Plant", w: 800, h: 1031, fw: 1006, comic: false,
+    alt: "Pen drawing of a leafy houseplant in a pot sitting in a shallow dish." },
+  { slug: "fruit", title: "Fruit", w: 800, h: 1027, fw: 1010, comic: false,
+    alt: "Pen and ink drawing of four pieces of fruit in a ribbed bowl, with hatched shadows." },
+  { slug: "fur-coat", title: "Fur Coat", w: 800, h: 1036, fw: 1004, comic: false,
+    alt: "Pen drawing of a young man with a buzz cut in a fluffy fur jacket and wide jeans, hands in his pockets." },
+  { slug: "yearbook-cover", title: "Yearbook Cover", w: 800, h: 533, fw: 2600, comic: false, tint: "#29373d", deep: "#284d5c",
+    alt: "Two city buses, one seen from behind and one head-on, on a street with skywriting that says Go Blues and graffiti letters that say Urban." },
+  { slug: "afraid-of-the-dark", title: "Afraid of the Dark", w: 800, h: 1035, fw: 2000, comic: true,
+    alt: "A sixteen-panel comic about a child who is afraid of the dark, then monsters, kidnappers, tsunamis and Voldemort." },
+  { slug: "soap-comic", title: "Soap Comic", w: 800, h: 1267, fw: 2000, comic: true, tint: "#424224", deep: "#68661c",
+    alt: "A comic in which cartoon water, dirt and soap explain how soap lifts dirt away, including polarity and micelles." },
+  { slug: "the-kings-request", title: "The King's Request", w: 800, h: 1594, fw: 2000, comic: true,
+    alt: "A comic in which a king asks for the DNA of a strawberry and his servants extract it step by step with soap, salt and ethanol." },
+];
+
+const thumbSrc = (s) => `images/thumbs/${s}.webp`;
+const fullSrc = (s) => `images/full/${s}.webp`;
+const BASE_TITLE = document.title;
+const LB_NEUTRAL = '#62636b';   // viewer background for black-and-white pieces
+
+/* ---------- Gallery ---------- */
+const gallery = document.getElementById('gallery');
+
+// Page colour drifts toward the piece under the cursor (mouse only, and not for reduced-motion)
+const canTint = window.matchMedia('(hover: hover)').matches &&
+                !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let tintTimer = 0;
+function tintPage(color) {
+  if (!canTint) return;
+  clearTimeout(tintTimer);
+  if (color) document.documentElement.style.setProperty('--bg', color);
+  else tintTimer = setTimeout(() => document.documentElement.style.removeProperty('--bg'), 160);
+}
+const tiles = PIECES.map((p, i) => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'piece';
+  b.setAttribute('aria-label', p.video ? p.title + ' (timelapse available)' : p.title);
+  b.dataset.ratio = p.h / p.w;
+  const img = new Image();
+  img.src = thumbSrc(p.slug);
+  img.width = p.w;
+  img.height = p.h;
+  img.alt = '';
+  img.decoding = 'async';
+  img.loading = i < 8 ? 'eager' : 'lazy';
+  const cap = document.createElement('span');
+  cap.className = 'cap';
+  cap.setAttribute('aria-hidden', 'true');
+  cap.textContent = p.title;
+  b.append(img, cap);
+  if (p.video) {
+    const play = document.createElement('span');
+    play.className = 'play';
+    play.setAttribute('aria-hidden', 'true');
+    play.innerHTML = '<svg viewBox="0 0 12 14" fill="currentColor"><path d="M0 0l12 7-12 7z"/></svg>';
+    b.append(play);
+  }
+  b.addEventListener('click', () => openAt(i));
+  b.addEventListener('mouseenter', () => tintPage(p.tint));
+  b.addEventListener('mouseleave', () => tintPage(null));
+  return b;
+});
+
+const topTiles = tiles.filter((_, i) => PIECES[i].top);
+const restTiles = tiles.filter((_, i) => !PIECES[i].top);
+const topRow = document.createElement('div');
+topRow.className = 'toprow';
+topRow.append(...topTiles);
+
+let colCount = 0;
+function layout() {
+  const w = window.innerWidth;
+  const n = w < 640 ? 2 : w < 1700 ? 3 : 4;
+  if (n === colCount) return;
+  colCount = n;
+  const cols = Array.from({ length: n }, () => {
+    const d = document.createElement('div');
+    d.className = 'col';
+    return d;
+  });
+  const heights = new Array(n).fill(0);
+  restTiles.forEach((t) => {
+    let k = 0;
+    for (let i = 1; i < n; i++) if (heights[i] < heights[k] - 0.001) k = i;
+    cols[k].appendChild(t);
+    heights[k] += parseFloat(t.dataset.ratio) + 0.02;
+  });
+  const masonry = document.createElement('div');
+  masonry.className = 'masonry';
+  masonry.append(...cols);
+  gallery.replaceChildren(...(topTiles.length ? [topRow] : []), masonry);
+}
+layout();
+let raf = 0;
+window.addEventListener('resize', () => {
+  cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(layout);
+});
+
+/* ---------- Viewer ---------- */
+const lb = document.getElementById('lb');
+const stage = document.getElementById('lb-stage');
+const big = document.getElementById('lb-img');
+const ttl = document.getElementById('lb-title');
+const cnt = document.getElementById('lb-count');
+const btnZoom = document.getElementById('lb-zoom');
+const btnReplay = document.getElementById('lb-replay');
+const video = document.getElementById('lb-video');
+const controls = document.getElementById('lb-controls');
+const btnPlay = document.getElementById('lb-play');
+const seek = document.getElementById('lb-seek');
+const timeEl = document.getElementById('lb-time');
+const ICON_PLAY = '<svg viewBox="0 0 12 14" fill="currentColor" aria-hidden="true"><path d="M1 0l11 7-11 7z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 12 14" fill="currentColor" aria-hidden="true"><path d="M1 0h3.5v14H1zM7.5 0H11v14H7.5z"/></svg>';
+btnPlay.innerHTML = ICON_PAUSE;
+const btnClose = document.getElementById('lb-close');
+const btnPrev = document.getElementById('lb-prev');
+const btnNext = document.getElementById('lb-next');
+
+let cur = -1;
+let zoomed = false;
+let lastFocus = null;
+
+function setHash(h) {
+  try { history.replaceState(null, '', h || location.pathname + location.search); } catch (e) {}
+}
+
+function setZoom(z) {
+  zoomed = z;
+  stage.classList.toggle('zoomed', z);
+  btnZoom.textContent = z ? 'Fit' : 'Zoom';
+  if (z) {
+    const p = PIECES[cur];
+    stage.style.setProperty('--zw', p.comic ? `min(100%, ${p.fw}px)` : `${p.fw}px`);
+  }
+}
+
+/* ---------- Timelapse replay ---------- */
+let replaying = false;
+let scrubbing = false;
+const fmt = (s) => { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+function sizeVideo() {
+  if (!replaying || !video.videoWidth) return;
+  const cs = getComputedStyle(stage);
+  const aw = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const ah = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  const s = Math.min(aw / video.videoWidth, ah / video.videoHeight);
+  video.style.width = Math.floor(video.videoWidth * s) + 'px';
+  video.style.height = Math.floor(video.videoHeight * s) + 'px';
+}
+
+function startReplay() {
+  const p = PIECES[cur];
+  if (!p || !p.video) return;
+  setZoom(false);
+  replaying = true;
+  stage.classList.add('replaying');
+  controls.hidden = false;
+  btnZoom.hidden = true;
+  btnReplay.textContent = 'Back to finished';
+  if (!video.getAttribute('src')) video.src = `videos/${p.slug}.mp4`;
+  video.currentTime = 0;
+  video.play().catch(() => {});
+  sizeVideo();
+}
+
+function stopReplay(fade) {
+  if (!replaying) return;
+  replaying = false;
+  video.pause();
+  stage.classList.remove('replaying');
+  controls.hidden = true;
+  btnZoom.hidden = false;
+  btnReplay.textContent = 'Watch it drawn';
+  if (fade) {
+    big.classList.add('fadein');
+    big.addEventListener('animationend', () => big.classList.remove('fadein'), { once: true });
+  }
+}
+
+function resetReplay() {
+  stopReplay(false);
+  video.removeAttribute('src');
+  video.load();
+  seek.value = 0;
+  timeEl.textContent = '0:00';
+}
+
+btnReplay.addEventListener('click', () => (replaying ? stopReplay(false) : startReplay()));
+btnPlay.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
+video.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
+video.addEventListener('loadedmetadata', sizeVideo);
+video.addEventListener('play', () => { btnPlay.innerHTML = ICON_PAUSE; btnPlay.setAttribute('aria-label', 'Pause'); });
+video.addEventListener('pause', () => { btnPlay.innerHTML = ICON_PLAY; btnPlay.setAttribute('aria-label', 'Play'); });
+video.addEventListener('timeupdate', () => {
+  if (!video.duration) return;
+  if (!scrubbing) seek.value = (video.currentTime / video.duration) * 1000;
+  timeEl.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration);
+});
+video.addEventListener('ended', () => stopReplay(true));
+seek.addEventListener('input', () => {
+  scrubbing = true;
+  if (video.duration) video.currentTime = (seek.value / 1000) * video.duration;
+});
+seek.addEventListener('change', () => { scrubbing = false; });
+window.addEventListener('resize', sizeVideo);
+
+function show(i) {
+  resetReplay();
+  const n = PIECES.length;
+  cur = (i + n) % n;
+  const p = PIECES[cur];
+  btnReplay.hidden = !p.video;
+  setZoom(false);
+  stage.scrollTo(0, 0);
+  big.alt = p.alt;
+  big.src = thumbSrc(p.slug);               // show the small version instantly
+  const hi = new Image();
+  hi.onload = () => { if (PIECES[cur] === p) big.src = hi.src; };
+  hi.src = fullSrc(p.slug);
+  if (p.deep) lb.style.setProperty('--lb-bg', p.deep); else lb.style.setProperty('--lb-bg', LB_NEUTRAL);
+  ttl.textContent = p.title;
+  cnt.textContent = `${cur + 1} / ${n}`;
+  document.title = `${p.title} \u2014 ${BASE_TITLE}`;
+  setHash('#' + p.slug);
+  new Image().src = fullSrc(PIECES[(cur + 1) % n].slug);   // warm the next one
+}
+
+function openAt(i) {
+  lastFocus = document.activeElement;
+  lb.hidden = false;
+  document.body.style.overflow = 'hidden';
+  show(i);
+  btnClose.focus();
+}
+
+function closeViewer() {
+  resetReplay();
+  lb.hidden = true;
+  document.body.style.overflow = '';
+  big.removeAttribute('src');
+  cur = -1;
+  document.title = BASE_TITLE;
+  setHash('');
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+
+function toggleZoom(e) {
+  let fx = 0.5, fy = 0.5;
+  if (e && !zoomed && big.naturalWidth) {
+    // Work out where on the picture itself the click landed (it is letterboxed in fit mode)
+    const r = big.getBoundingClientRect();
+    const s = Math.min(r.width / big.naturalWidth, r.height / big.naturalHeight);
+    const cw = big.naturalWidth * s, ch = big.naturalHeight * s;
+    fx = Math.min(1, Math.max(0, (e.clientX - r.left - (r.width - cw) / 2) / cw));
+    fy = Math.min(1, Math.max(0, (e.clientY - r.top - (r.height - ch) / 2) / ch));
+  }
+  const wasZoomed = zoomed;
+  setZoom(!zoomed);
+  if (!wasZoomed) {
+    stage.scrollLeft = big.offsetLeft + fx * big.offsetWidth - stage.clientWidth / 2;
+    stage.scrollTop = big.offsetTop + fy * big.offsetHeight - stage.clientHeight / 2;
+    stage.focus({ preventScroll: true });   // so arrow keys pan while zoomed
+  } else {
+    stage.scrollTo(0, 0);
+  }
+}
+
+big.addEventListener('click', toggleZoom);
+btnZoom.addEventListener('click', () => toggleZoom(null));
+btnClose.addEventListener('click', closeViewer);
+btnPrev.addEventListener('click', () => show(cur - 1));
+btnNext.addEventListener('click', () => show(cur + 1));
+
+document.addEventListener('keydown', (e) => {
+  if (lb.hidden) return;
+  if (e.key === 'Escape') { closeViewer(); return; }
+  const typing = document.activeElement && document.activeElement.tagName === 'INPUT';
+  if (e.key === ' ' && replaying && !typing && document.activeElement.tagName !== 'BUTTON') {
+    e.preventDefault();
+    video.paused ? video.play() : video.pause();
+    return;
+  }
+  if (typing && e.key !== 'Tab') return;
+  if (e.key === 'ArrowLeft' && !zoomed) { show(cur - 1); return; }
+  if (e.key === 'ArrowRight' && !zoomed) { show(cur + 1); return; }
+  if (e.key === 'Tab') {
+    const f = [...lb.querySelectorAll('button, input')].filter((b) => b.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
+
+// Swipe left/right on phones
+let sx = 0, sy = 0, tracking = false;
+stage.addEventListener('touchstart', (e) => {
+  if (zoomed || e.touches.length !== 1) return;
+  tracking = true;
+  sx = e.touches[0].clientX;
+  sy = e.touches[0].clientY;
+}, { passive: true });
+stage.addEventListener('touchend', (e) => {
+  if (!tracking) return;
+  tracking = false;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - sx, dy = t.clientY - sy;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) show(cur + (dx < 0 ? 1 : -1));
+});
+
+// Links like beckhamgrasso.com/#midnight open that piece directly
+function openFromHash() {
+  const i = PIECES.findIndex((p) => p.slug === location.hash.slice(1));
+  if (i >= 0 && i !== cur) openAt(i);
+  else if (i < 0 && !lb.hidden) closeViewer();
+}
+window.addEventListener('hashchange', openFromHash);
+openFromHash();
+</script>
+</body>
+</html>
